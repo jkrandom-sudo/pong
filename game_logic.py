@@ -78,18 +78,23 @@ class Paddle:
     def __init__(self, x: int, y: int, height: int = PADDLE_HEIGHT,
                  game_height: int = GAME_HEIGHT):
         self.x = x
-        self.y = y
         self.height = height
         self.game_height = game_height
         self.min_y = height // 2
         self.max_y = game_height - 1 - height // 2
+        # Clamp initial y to valid bounds
+        self.y = max(self.min_y, min(self.max_y, y))
 
     def move_up(self, amount: int = 1) -> None:
         """Move paddle up, clamped to top boundary."""
+        if amount <= 0:
+            return
         self.y = max(self.min_y, self.y - amount)
 
     def move_down(self, amount: int = 1) -> None:
         """Move paddle down, clamped to bottom boundary."""
+        if amount <= 0:
+            return
         self.y = min(self.max_y, self.y + amount)
 
     def get_top(self) -> int:

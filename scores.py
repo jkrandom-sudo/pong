@@ -99,7 +99,18 @@ def format_score_entry(entry: Dict, language: str = 'zh') -> str:
 
 def make_score_entry(winner: int, score1: int, score2: int,
                      mode: str, speed_level: int) -> Dict:
-    """Create a score entry dict with current timestamp."""
+    """Create a score entry dict with current timestamp.
+
+    Raises ValueError if winner is not 1 or 2, or if scores are negative.
+    """
+    if winner not in (1, 2):
+        raise ValueError(f"winner must be 1 or 2, got {winner}")
+    if score1 < 0 or score2 < 0:
+        raise ValueError(f"scores must be non-negative, got {score1}, {score2}")
+    if mode not in ('ai', '2p'):
+        raise ValueError(f"mode must be 'ai' or '2p', got {mode}")
+    if not isinstance(speed_level, int) or speed_level < 1 or speed_level > 10:
+        raise ValueError(f"speed_level must be 1-10, got {speed_level}")
     return {
         'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'winner': winner,
